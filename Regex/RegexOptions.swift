@@ -33,12 +33,8 @@ public struct RegexOptions : OptionSet {
     public static let none:RegexOptions = []
 }
 
-//keep it. Unfortunately Swift 2.2 can not use RegularExpression.Options in extension somehow
-#if swift(>=3.0) && !os(Linux)
-    private typealias RegularExpressionOptions = RegularExpression.Options
-#else
-    private typealias RegularExpressionOptions = NSRegularExpressionOptions
-#endif
+// MARK: Fix swift 3.0
+private typealias RegularExpressionOptions = NSRegularExpression.Options
 
 extension RegularExpressionOptions : Hashable {
     public var hashValue: Int {
@@ -56,7 +52,7 @@ extension RegexOptions : Hashable {
     }
 }
 
-private let nsToRegexOptionsMap:Dictionary<RegularExpression.Options, RegexOptions> = [
+private let nsToRegexOptionsMap:Dictionary<NSRegularExpression.Options, RegexOptions> = [
     .caseInsensitive:.caseInsensitive,
     .allowCommentsAndWhitespace:.allowCommentsAndWhitespace,
     .ignoreMetacharacters:.ignoreMetacharacters,
@@ -65,12 +61,12 @@ private let nsToRegexOptionsMap:Dictionary<RegularExpression.Options, RegexOptio
     .useUnixLineSeparators:.useUnixLineSeparators,
     .useUnicodeWordBoundaries:.useUnicodeWordBoundaries]
 
-private let regexToNSOptionsMap:Dictionary<RegexOptions, RegularExpression.Options> = nsToRegexOptionsMap.map { (key, value) in
+private let regexToNSOptionsMap:Dictionary<RegexOptions, NSRegularExpression.Options> = nsToRegexOptionsMap.map { (key, value) in
         (value, key)
     }^
 
 public extension RegexOptions {
-    public var ns:RegularExpression.Options {
+    public var ns: NSRegularExpression.Options {
         get {
             let nsSeq = regexToNSOptionsMap.filter { (regex, _) in
                 self.contains(regex)
@@ -78,7 +74,7 @@ public extension RegexOptions {
                 ns
             }
             
-            return RegularExpression.Options(nsSeq)
+            return NSRegularExpression.Options(nsSeq)
         }
     }
 }

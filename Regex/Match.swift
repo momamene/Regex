@@ -35,11 +35,11 @@ public protocol MatchType {
 /**
  * Represents a pattern match
  */
-public class Match : MatchType {
+open class Match : MatchType {
     /**
      * The original string supplied to Regex for matching
      */
-    public let source:String
+    open let source:String
     
     let match:CompiledPatternMatch
     let groupNames:[String]
@@ -59,7 +59,7 @@ public class Match : MatchType {
     /**
      * The matching range
      */
-    public var range:StringRange {
+    open var range:StringRange {
         get {
             //here it never throws, because otherwise it will not match
             return try! match.range.asRange(ofString: source)
@@ -69,14 +69,12 @@ public class Match : MatchType {
     /**
      * The matching ranges of subgroups
      */
-    public var ranges:[StringRange?] {
+    open var ranges:[StringRange?] {
         get {
             var result = Array<StringRange?>()
             for i in 0..<match.numberOfRanges {
                 //subrange can be empty
-                
-                let stringRange = try? match.range(at: i).asRange(ofString: source)
-                
+                let stringRange = try? match.rangeAt(i).asRange(ofString: source)
                 result.append(stringRange)
             }
             return result
@@ -89,8 +87,8 @@ public class Match : MatchType {
      - parameter index: Number of subgroup to match to. Zero represents the whole match.
      - returns: A range or nil if the supplied subgroup does not exist.
      */
-    public func range(at index:Int) -> StringRange? {
-        return try? match.range(at: index).asRange(ofString: source)
+    open func range(at index: Int) -> StringRange? {
+        return try? match.rangeAt(index).asRange(ofString: source)
     }
     
     /**
@@ -99,15 +97,15 @@ public class Match : MatchType {
      - parameter name: Name of subgroup to match to.
      - returns: A range or nil if the supplied subgroup does not exist.
      */
-    public func range(named name:String) -> StringRange? {
+    open func range(named name:String) -> StringRange? {
         //subrange can be empty
-        return try? match.range(at: index(of: name)).asRange(ofString: source)
+        return try? match.rangeAt(index(of: name)).asRange(ofString: source)
     }
 
     /**
      * The whole matched substring.
      */
-    public var matched:String {
+    open var matched:String {
         get {
             //zero group is always there, otherwise there is no match
             return group(at: 0)!
@@ -117,7 +115,7 @@ public class Match : MatchType {
     /**
      * Matched subgroups' substrings.
      */
-    public var subgroups:[String?] {
+    open var subgroups:[String?] {
         get {
             
             let subRanges = ranges.suffix(from: 1)
@@ -135,7 +133,7 @@ public class Match : MatchType {
      - parameter name: Index of subgroup to match to. Zero represents the whole match.
      - returns: A substring or nil if the supplied subgroup does not exist.
      */
-    public func group(at index:Int) -> String? {
+    open func group(at index:Int) -> String? {
         let range = self.range(at: index)
         return range.map { range in
             source.substring(with: range)
@@ -148,7 +146,7 @@ public class Match : MatchType {
      - parameter name: Index of subgroup to match to.
      - returns: A substring or nil if the supplied subgroup does not exist.
      */
-    public func group(named name:String) -> String? {
+    open func group(named name:String) -> String? {
         return self.group(at: index(of: name))
     }
 }

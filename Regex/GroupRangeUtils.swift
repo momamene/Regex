@@ -17,15 +17,15 @@
 import Foundation
 import Boilerplate
     
-enum InvalidRangeError : ErrorProtocol {
-    case Error
+enum InvalidRangeError : Error {
+    case error
 }
 
 extension GroupRange {
     func asRange(ofString source:String) throws -> StringRange {
         let len = source.characters.count
         if self.location < 0 || self.location >= len || self.location + self.length > len {
-            throw InvalidRangeError.Error
+            throw InvalidRangeError.error
         }
         
         let start = source.index(source.startIndex, offsetBy: self.location)

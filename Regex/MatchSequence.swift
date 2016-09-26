@@ -17,7 +17,7 @@
 import Foundation
 import Boilerplate
 
-public class MatchSequence : Sequence {
+open class MatchSequence : Sequence {
     let source:String
     let context:CompiledMatchContext
     let groupNames:[String]
@@ -31,18 +31,18 @@ public class MatchSequence : Sequence {
     #if swift(>=3.0)
         public typealias Iterator = AnyIterator<Match>
     #else
-        public typealias Generator = AnyGenerator<Match>
-        public typealias Iterator = Generator
+        open typealias Generator = AnyIterator<Match>
+        open typealias Iterator = Generator
     #endif
     
     #if swift(>=3.0)
     #else
-        public func generate() -> Generator {
+        open func generate() -> Generator {
             return makeIterator()
         }
     #endif
     
-    public func makeIterator() -> Iterator {
+    open func makeIterator() -> Iterator {
         var index = context.startIndex
             
         return Iterator {

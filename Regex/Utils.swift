@@ -24,7 +24,7 @@ public typealias StringRange = Range<String.Index>
 #else
     extension NSTextCheckingResult {
         public func range(at idx: Int) -> NSRange {
-            return rangeAtIndex(idx)
+            return rangeAt(idx)
         }
     }
 #endif
